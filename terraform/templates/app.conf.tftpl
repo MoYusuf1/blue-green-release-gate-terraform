@@ -1,0 +1,17 @@
+# Fixed-response release simulator. Not a real pricing service.
+server {
+    listen 80;
+    default_type application/json;
+
+    location = / {
+        return 200 '{"color":"${color}","version":"${version}"}\n';
+    }
+
+    location = /health {
+        return ${ready ? 200 : 503} '{"color":"${color}","version":"${version}","ready":${ready}}\n';
+    }
+
+    location = /quote {
+        return 200 '{"color":"${color}","version":"${version}","total_cents":${quote_total}}\n';
+    }
+}

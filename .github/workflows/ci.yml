@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: terraform-linters/setup-tflint@v4
+      - name: Format and validate
+        run: make lint
+      - name: Terraform and script tests
+        run: make test
+      - name: tflint
+        run: |
+          tflint --init
+          tflint --chdir=terraform --config="$PWD/.tflint.hcl"
+
+  e2e:
+    # GitHub runners have Docker, so the real drill runs on every push, not just mocked tests.
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - name: Reject, promote, break, roll back
+        run: make e2e
+        env:
+          PROBE_LOG: probe.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: probe-log
+          path: probe.jsonl

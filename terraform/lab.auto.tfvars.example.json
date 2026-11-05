@@ -1,0 +1,7 @@
+{
+  "active_color": "blue",
+  "releases": {
+    "blue": { "version": "v1", "ready": true, "quote_total": 1200 },
+    "green": { "version": "v2", "ready": true, "quote_total": 1200 }
+  }
+}

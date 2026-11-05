@@ -1,0 +1,20 @@
+# Docker's embedded DNS; re-resolve so a replaced app container is found by name.
+resolver 127.0.0.11 valid=5s;
+
+# Live traffic
+server {
+    listen 8080;
+    location / {
+        set $upstream http://mo-bg-${live_color}:80;
+        proxy_pass $upstream;
+    }
+}
+
+# Preview of the candidate
+server {
+    listen 8081;
+    location / {
+        set $upstream http://mo-bg-${preview_color}:80;
+        proxy_pass $upstream;
+    }
+}

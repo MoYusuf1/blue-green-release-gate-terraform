@@ -1,0 +1,9 @@
+.terraform/
+*.tfstate*
+*.tfplan
+terraform/lab.auto.tfvars.json
+generated/
+__pycache__/
+# Personal working docs, kept out of the repo
+runsheet.md
+review.md
